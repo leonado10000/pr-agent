@@ -1,0 +1,32 @@
+name: 'PR Agent Reviewer'
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: PR Agent Reviewer
+        env:
+          GH_APP_ID: ${{ secrets.KRITIK_APP_ID }}
+          GH_APP_PRIVATE_KEY: ${{ secrets.KRITIK_PRIVATE_KEY }}
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: python src/main.py
