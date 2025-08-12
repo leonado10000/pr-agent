@@ -11,6 +11,7 @@ def get_installation_access_token():
 
     try:
         github_context = json.loads(os.environ['GITHUB_CONTEXT'])
+        print(github_context)
         installation_id = github_context['event']['installation']['id']
     except (KeyError, json.JSONDecodeError) as e:
         print(f"Error parsing GitHub context for installation ID: {e}")
