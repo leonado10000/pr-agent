@@ -33,7 +33,7 @@ jobs:
       - name: Run PR AGENT
         env:
           # Securely pass secrets and context to our Python script
-          KRITIK_APP_ID: ${{ secrets.PR_AGENT_APP_ID }}
-          KRITIK_PRIVATE_KEY: ${{ secrets.PR_AGENT_PRIVATE_KEY }}
+          PR_AGENT_APP_ID: ${{ secrets.PR_AGENT_APP_ID }}
+          PR_AGENT_PRIVATE_KEY: ${{ secrets.PR_AGENT_PRIVATE_KEY }}
           GITHUB_CONTEXT: ${{ toJSON(github) }} # Pass the entire event payload
         run: python src/main.py
