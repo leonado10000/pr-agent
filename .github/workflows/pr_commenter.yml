@@ -1,7 +1,7 @@
 name: 'PR AGENT Analysis'
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened] # Trigger when a PR is opened or reopened
 
 jobs:
@@ -27,12 +27,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      # --- ADD THIS NEW STEP ---
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
 
       # Step 3: Install our application's dependencies
       - name: Install Dependencies
