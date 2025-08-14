@@ -10,8 +10,8 @@ def get_installation_access_token():
     and then exchanges it for a short-lived installation access token.
     This is a hardened, explicit authentication method.
     """
-    app_id = os.environ['KRITIK_APP_ID']
-    private_key_pem = os.environ['KRITIK_PRIVATE_KEY']
+    app_id = os.environ['PR_AGENT_APP_ID']
+    private_key_pem = os.environ['PR_AGENT_PRIVATE_KEY']
     
     try:
         github_context = json.loads(os.environ['GITHUB_CONTEXT'])
@@ -42,10 +42,10 @@ def get_installation_access_token():
         response = requests.get(installation_url, headers=headers)
         response.raise_for_status()
         installation_id = response.json()['id']
-        print(f"Successfully found installation ID: {installation_id}")
+        print(f"Successfully found installation ID for PR_AGENT: {installation_id}")
     except requests.exceptions.RequestException as e:
         print(f"FATAL: Could not get installation ID for repo '{repo_full_name}'.")
-        print("ACTION REQUIRED: Ensure the 'PR Agent' App is installed on this repository.")
+        print("ACTION REQUIRED: Ensure the 'PR_AGENT' App is installed on this repository.")
         print(f"Status: {e.response.status_code}, Body: {e.response.text}")
         raise
 

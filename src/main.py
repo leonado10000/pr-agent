@@ -23,7 +23,7 @@ def post_pr_comment(token: str, repo_full_name: str, pr_number: int, body: str):
 
 def main():
     """Main entry point for the GitHub Action."""
-    print("PR AGENT analysis initiated.")
+    print("PR_AGENT analysis initiated.")
     try:
         # 1. Parse context provided by the workflow runner
         github_context = json.loads(os.environ['GITHUB_CONTEXT'])
@@ -31,16 +31,16 @@ def main():
         pr_number = github_context['event']['pull_request']['number']
 
         # 2. Authenticate as the GitHub App to get a temporary token
-        print("Authenticating as PR AGENT...")
+        print("Authenticating as PR_AGENT...")
         access_token = get_installation_access_token()
         print("Authentication successful.")
 
         # 3. Perform the action (for now, a hardcoded comment)
-        comment_body = "Hello from PR AGENT. Analysis in progress..."
+        comment_body = "Hello from PR_AGENT. Analysis in progress..."
         print(f"Posting status comment to {repo_full_name} PR #{pr_number}...")
         post_pr_comment(access_token, repo_full_name, pr_number, comment_body)
 
-        print("PR AGENT analysis complete.")
+        print("PR_AGENT analysis complete.")
 
     except Exception as e:
         print(f"An unhandled error occurred: {e}")
