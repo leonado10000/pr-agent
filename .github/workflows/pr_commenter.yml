@@ -28,5 +28,6 @@ jobs:
         env:
           PR_AGENT_APP_ID: ${{ secrets.PR_AGENT_APP_ID }}
           PR_AGENT_PRIVATE_KEY: ${{ secrets.PR_AGENT_PRIVATE_KEY }}
+          OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: python src/main.py

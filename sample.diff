@@ -1,0 +1,12 @@
+--- a/src/main.py
++++ b/src/main.py
+@@ -34,7 +34,7 @@
+         access_token = get_installation_access_token()
+         print("Authentication successful.")
+ 
+-        # 3. Perform the action (for now, a hardcoded comment)
+-        comment_body = "Hello from PR_AGENT. Analysis in progress..."
++        # 3. This is a test change for our sample diff.
++        comment_body = "This is a new line of text."
+         print(f"Posting status comment to {repo_full_name} PR #{pr_number}...")
+         post_pr_comment(access_token, repo_full_name, pr_number, comment_body)
