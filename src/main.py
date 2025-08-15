@@ -44,7 +44,6 @@ def main():
 
     except Exception as e:
         print(f"An unhandled error occurred: {e}")
-        # Fail the workflow explicitly
         exit(1)
 
 if __name__ == "__main__":
