@@ -1,2 +1,5 @@
 requests
 pyjwt[crypto]
+openai
+google-generativeai
+python-dotenv
