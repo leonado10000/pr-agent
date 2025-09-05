@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'src'
 from main import main
 
 # Load a .env file from the current directory
-load_dotenv() 
+load_dotenv()
 
 def run_local_test():
     """
@@ -23,7 +23,7 @@ def run_local_test():
     print("--- Starting Local Integration Test ---")
 
     # Load the sample diff file
-    with open('sample.diff', 'r') as f:
+    with open('tests\\65852.diff.txt', 'r') as f:
         sample_diff_text = f.read()
 
     # Mock the functions that interact with GitHub. We don't want to post comments.
@@ -37,7 +37,7 @@ def run_local_test():
             'event': {
                 'pull_request': {
                     'number': 123,
-                    'diff_url': 'https://fake.diff.url/pull/123.diff'
+                    'diff_url': 'rahul jangra'
                 }
             }
         })
@@ -55,10 +55,10 @@ def run_local_test():
         mock_post_comment.assert_called_once()
         args, kwargs = mock_post_comment.call_args
         posted_summary = args[3] # The 'body' argument of post_pr_comment
-        
+
         print(f"Verified that post_pr_comment was called.")
         print(f"Summary that would have been posted:\n---\n{posted_summary}\n---")
-        
+
         assert len(posted_summary) > 20
 
 if __name__ == '__main__':

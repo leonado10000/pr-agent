@@ -29,5 +29,6 @@ jobs:
           PR_AGENT_APP_ID: ${{ secrets.PR_AGENT_APP_ID }}
           PR_AGENT_PRIVATE_KEY: ${{ secrets.PR_AGENT_PRIVATE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: python src/main.py

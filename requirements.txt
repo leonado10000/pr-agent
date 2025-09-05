@@ -1,3 +1,4 @@
 requests
 pyjwt[crypto]
 openai
+google-generativeai
