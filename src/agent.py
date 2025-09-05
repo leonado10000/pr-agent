@@ -1,31 +1,25 @@
 import os
-import openai
-import google.generativeai as genai
-import httpx
+import re
+from openai import OpenAI
+from dotenv import load_dotenv
+# You'll need to pass the client around or initialize it as needed.
+# For now, let's assume it's initialized.
+load_dotenv()
 
-# --- Initialize BOTH clients at the module level ---
-
-# 1. Google Gemini Client
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-
-# 2. OpenAI Client (with the definitive proxy fix)
-# The correct keyword is 'proxy' (singular), set to None to disable.
-client_openai = openai.OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),
-    http_client=httpx.Client(proxy=None) # <-- THIS IS THE FIX
-)
-
-# --- Agent Functions ---
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 def _get_file_summary(file_diff: str) -> str:
     """
-    (The "Map" Step) Uses OpenAI's GPT-4o mini for fast, cheap analysis.
+    (The "Map" Step) Generates a high-density summary for a single file's diff.
+    Uses a cheaper, faster model for this high-volume task.
     """
     system_prompt = "You are a code analysis bot. Summarize the changes in this diff file in a concise, technical, bullet-point format."
     
+    # We use a cheaper model for this high-volume, parallelizable task.
+    # This is a key architectural decision.
     try:
-        response = client_openai.chat.completions.create(
-            model="gpt-4o-mini",
+        response = client.chat.completions.create(
+            model="gpt-4o-mini", # Cheaper and faster
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": file_diff},
@@ -34,11 +28,12 @@ def _get_file_summary(file_diff: str) -> str:
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"Error summarizing file with GPT-4o mini: {e}"
+        return f"Error summarizing file: {e}"
 
 def get_strategic_summary(file_summaries: list[str]) -> str:
     """
-    (The "Reduce" Step) Uses Google's Gemini 1.5 Pro for powerful, high-level synthesis.
+    (The "Reduce" Step) Takes a list of file summaries and synthesizes a high-level overview.
+    Uses our most powerful model for this critical reasoning task.
     """
     system_prompt = """
     You are a principal engineer reviewing a pull request. 
@@ -47,14 +42,18 @@ def get_strategic_summary(file_summaries: list[str]) -> str:
     Focus on the overall goal, the architectural impact, and any potential risks.
     Structure your output with the 'Three-Pillar Analysis': ## Summary, ## Rationale, and ## Consequence.
     """
-    model = genai.GenerativeModel('gemini-1.5-pro', system_instruction=system_prompt)
     
-    combined_summaries = "\n\n---\n\n".join(file_summaries)
+    combined_summaries = "\n".join(file_summaries)
     
     try:
-        response = model.generate_content(f"Here are the file summaries:\n{combined_summaries}")
-        if not response.parts:
-            return "Error: Gemini Pro returned no content, possibly due to a safety block."
-        return response.text
+        response = client.chat.completions.create(
+            model="gpt-4o-mini", # Our most powerful model
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Here are the file summaries:\n{combined_summaries}"},
+            ],
+            temperature=0.2,
+        )
+        return response.choices[0].message.content
     except Exception as e:
-        return f"Error generating strategic summary with Gemini Pro: {e}"
+        return f"Error generating strategic summary: {e}"
