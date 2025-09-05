@@ -2,9 +2,6 @@ import os
 import openai
 import google.generativeai as genai
 import httpx
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # --- Initialize BOTH clients at the module level ---
 
@@ -50,7 +47,7 @@ def get_strategic_summary(file_summaries: list[str]) -> str:
     Focus on the overall goal, the architectural impact, and any potential risks.
     Structure your output with the 'Three-Pillar Analysis': ## Summary, ## Rationale, and ## Consequence.
     """
-    model = genai.GenerativeModel('gemini-2.5-pro', system_instruction=system_prompt)
+    model = genai.GenerativeModel('gemini-1.5-pro', system_instruction=system_prompt)
     
     combined_summaries = "\n\n---\n\n".join(file_summaries)
     
